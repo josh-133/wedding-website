@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List, Optional
-from datetime import timedelta
+from datetime import timedelta, datetime
+from collections import defaultdict
 import csv
 import io
 from .. import models, schemas, config
@@ -12,15 +13,51 @@ from ..auth import verify_password, create_access_token, verify_token
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
+# Simple in-memory rate limiting for login attempts
+# In production, consider using Redis for distributed rate limiting
+login_attempts: dict[str, list[datetime]] = defaultdict(list)
+MAX_LOGIN_ATTEMPTS = 5
+LOGIN_WINDOW_SECONDS = 300  # 5 minutes
+
+
+def check_rate_limit(ip: str) -> bool:
+    """Check if IP has exceeded login rate limit. Returns True if allowed."""
+    now = datetime.now()
+    # Clean old attempts
+    login_attempts[ip] = [
+        attempt for attempt in login_attempts[ip]
+        if (now - attempt).total_seconds() < LOGIN_WINDOW_SECONDS
+    ]
+    return len(login_attempts[ip]) < MAX_LOGIN_ATTEMPTS
+
+
+def record_login_attempt(ip: str):
+    """Record a failed login attempt."""
+    login_attempts[ip].append(datetime.now())
+
 
 @router.post("/login", response_model=schemas.AdminToken)
-def login(credentials: schemas.AdminLogin):
+def login(credentials: schemas.AdminLogin, request: Request):
+    client_ip = request.client.host if request.client else "unknown"
+
+    # Check rate limit
+    if not check_rate_limit(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts. Please try again later.",
+        )
+
     if not verify_password(credentials.password):
+        record_login_attempt(client_ip)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+    # Clear attempts on successful login
+    login_attempts.pop(client_ip, None)
+
     access_token = create_access_token(
         data={"sub": "admin"},
         expires_delta=timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
