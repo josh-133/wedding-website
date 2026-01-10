@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from typing import List
 from .. import models, schemas
 from ..database import get_db
+from ..email import send_rsvp_confirmation
 
 router = APIRouter(prefix="/api", tags=["rsvp"])
 
@@ -23,7 +24,11 @@ def get_event(slug: str, db: Session = Depends(get_db)):
 
 
 @router.post("/rsvp", response_model=schemas.RSVPResponse)
-def create_rsvp(rsvp: schemas.RSVPCreate, db: Session = Depends(get_db)):
+def create_rsvp(
+    rsvp: schemas.RSVPCreate,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
     # Find the event
     event = db.query(models.Event).filter(models.Event.slug == rsvp.event_slug).first()
     if not event:
@@ -41,6 +46,17 @@ def create_rsvp(rsvp: schemas.RSVPCreate, db: Session = Depends(get_db)):
         existing_rsvp.attending = rsvp.attending
         db.commit()
         db.refresh(existing_rsvp)
+
+        # Send confirmation email in background
+        background_tasks.add_task(
+            send_rsvp_confirmation,
+            to_email=rsvp.email,
+            guest_name=rsvp.name,
+            event_name=event.name,
+            event_date=event.event_date,
+            attending=rsvp.attending
+        )
+
         return existing_rsvp
 
     # Create new RSVP
@@ -55,6 +71,17 @@ def create_rsvp(rsvp: schemas.RSVPCreate, db: Session = Depends(get_db)):
         db.add(db_rsvp)
         db.commit()
         db.refresh(db_rsvp)
+
+        # Send confirmation email in background
+        background_tasks.add_task(
+            send_rsvp_confirmation,
+            to_email=rsvp.email,
+            guest_name=rsvp.name,
+            event_name=event.name,
+            event_date=event.event_date,
+            attending=rsvp.attending
+        )
+
         return db_rsvp
     except IntegrityError:
         db.rollback()
