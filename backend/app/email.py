@@ -4,6 +4,7 @@ import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import date
+from typing import List, Optional
 from . import config
 
 logger = logging.getLogger(__name__)
@@ -14,25 +15,58 @@ def format_date(event_date: date) -> str:
     return event_date.strftime("%A, %d %B %Y")
 
 
+def format_guest_list_html(guest_names: List[str]) -> str:
+    """Format guest names as HTML list."""
+    if len(guest_names) == 1:
+        return f"<p><strong>Guest:</strong> {guest_names[0]}</p>"
+
+    guests_html = "<p><strong>Guests:</strong></p><ul style=\"margin: 8px 0; padding-left: 20px;\">"
+    for name in guest_names:
+        guests_html += f"<li style=\"margin: 4px 0;\">{name}</li>"
+    guests_html += "</ul>"
+    return guests_html
+
+
+def format_guest_list_text(guest_names: List[str]) -> str:
+    """Format guest names as plain text list."""
+    if len(guest_names) == 1:
+        return f"Guest: {guest_names[0]}"
+
+    guests_text = "Guests:\n"
+    for name in guest_names:
+        guests_text += f"  - {name}\n"
+    return guests_text
+
+
 def get_confirmation_email_html(
     guest_name: str,
     event_name: str,
     event_date: date,
-    attending: bool
+    attending: bool,
+    guest_names: Optional[List[str]] = None,
+    guest_count: int = 1
 ) -> str:
     """Generate HTML email content for RSVP confirmation."""
     formatted_date = format_date(event_date)
 
+    # Use guest_names if provided, otherwise just the primary guest
+    all_guests = guest_names if guest_names else [guest_name]
+    guest_list_html = format_guest_list_html(all_guests)
+
     if attending:
+        party_text = f"{guest_count} guest{'s' if guest_count > 1 else ''}" if guest_count > 1 else "you"
         message = f"""
-        <p>We're thrilled that you'll be joining us for our <strong>{event_name}</strong>!</p>
+        <p>We're thrilled that {party_text} will be joining us for our <strong>{event_name}</strong>!</p>
         <p><strong>Date:</strong> {formatted_date}</p>
+        {guest_list_html}
         <p>We can't wait to celebrate with you. More details will follow closer to the date.</p>
         """
         subject_status = "Confirmed"
     else:
+        party_text = f"your party of {guest_count}" if guest_count > 1 else "you"
         message = f"""
-        <p>We're sorry you won't be able to make it to our <strong>{event_name}</strong> on {formatted_date}.</p>
+        <p>We're sorry {party_text} won't be able to make it to our <strong>{event_name}</strong> on {formatted_date}.</p>
+        {guest_list_html}
         <p>We'll miss having you there, but we understand. Thank you for letting us know!</p>
         """
         subject_status = "Received"
@@ -74,19 +108,31 @@ def get_confirmation_email_text(
     guest_name: str,
     event_name: str,
     event_date: date,
-    attending: bool
+    attending: bool,
+    guest_names: Optional[List[str]] = None,
+    guest_count: int = 1
 ) -> str:
     """Generate plain text email content for RSVP confirmation."""
     formatted_date = format_date(event_date)
 
+    # Use guest_names if provided, otherwise just the primary guest
+    all_guests = guest_names if guest_names else [guest_name]
+    guest_list_text = format_guest_list_text(all_guests)
+
     if attending:
-        message = f"""We're thrilled that you'll be joining us for our {event_name}!
+        party_text = f"{guest_count} guest{'s' if guest_count > 1 else ''}" if guest_count > 1 else "you"
+        message = f"""We're thrilled that {party_text} will be joining us for our {event_name}!
 
 Date: {formatted_date}
 
+{guest_list_text}
+
 We can't wait to celebrate with you. More details will follow closer to the date."""
     else:
-        message = f"""We're sorry you won't be able to make it to our {event_name} on {formatted_date}.
+        party_text = f"your party of {guest_count}" if guest_count > 1 else "you"
+        message = f"""We're sorry {party_text} won't be able to make it to our {event_name} on {formatted_date}.
+
+{guest_list_text}
 
 We'll miss having you there, but we understand. Thank you for letting us know!"""
 
@@ -110,7 +156,9 @@ def send_rsvp_confirmation(
     guest_name: str,
     event_name: str,
     event_date: date,
-    attending: bool
+    attending: bool,
+    guest_names: Optional[List[str]] = None,
+    guest_count: int = 1
 ) -> bool:
     """
     Send RSVP confirmation email.
@@ -133,8 +181,12 @@ def send_rsvp_confirmation(
         msg["To"] = to_email
 
         # Create plain text and HTML versions
-        text_content = get_confirmation_email_text(guest_name, event_name, event_date, attending)
-        html_content = get_confirmation_email_html(guest_name, event_name, event_date, attending)
+        text_content = get_confirmation_email_text(
+            guest_name, event_name, event_date, attending, guest_names, guest_count
+        )
+        html_content = get_confirmation_email_html(
+            guest_name, event_name, event_date, attending, guest_names, guest_count
+        )
 
         msg.attach(MIMEText(text_content, "plain"))
         msg.attach(MIMEText(html_content, "html"))

@@ -71,32 +71,34 @@ def get_rsvps(
     db: Session = Depends(get_db),
     _: bool = Depends(verify_token)
 ):
-    query = db.query(
-        models.RSVP.id,
-        models.RSVP.name,
-        models.RSVP.email,
-        models.RSVP.attending,
-        models.RSVP.submitted_at,
-        models.Event.name.label("event_name"),
-        models.Event.slug.label("event_slug")
-    ).join(models.Event)
+    query = db.query(models.RSVP).join(models.Event)
 
     if event_slug:
         query = query.filter(models.Event.slug == event_slug)
 
-    results = query.order_by(models.RSVP.submitted_at.desc()).all()
+    rsvps = query.order_by(models.RSVP.submitted_at.desc()).all()
 
     return [
         schemas.RSVPListResponse(
-            id=r.id,
-            name=r.name,
-            email=r.email,
-            attending=r.attending,
-            submitted_at=r.submitted_at,
-            event_name=r.event_name,
-            event_slug=r.event_slug
+            id=rsvp.id,
+            name=rsvp.name,
+            email=rsvp.email,
+            attending=rsvp.attending,
+            guest_count=rsvp.guest_count,
+            submitted_at=rsvp.submitted_at,
+            event_name=rsvp.event.name,
+            event_slug=rsvp.event.slug,
+            guests=[
+                schemas.GuestResponse(
+                    id=guest.id,
+                    name=guest.name,
+                    dietary_requirements=guest.dietary_requirements,
+                    is_primary=guest.is_primary
+                )
+                for guest in rsvp.guests
+            ]
         )
-        for r in results
+        for rsvp in rsvps
     ]
 
 
@@ -112,12 +114,25 @@ def get_stats(db: Session = Depends(get_db), _: bool = Depends(verify_token)):
             models.RSVP.attending == True
         ).count()
 
+        # Sum up total guests (not just RSVPs)
+        guests_attending = db.query(func.sum(models.RSVP.guest_count)).filter(
+            models.RSVP.event_id == event.id,
+            models.RSVP.attending == True
+        ).scalar() or 0
+
+        guests_not_attending = db.query(func.sum(models.RSVP.guest_count)).filter(
+            models.RSVP.event_id == event.id,
+            models.RSVP.attending == False
+        ).scalar() or 0
+
         stats.append(schemas.StatsResponse(
             event_slug=event.slug,
             event_name=event.name,
             total_responses=total,
             attending=attending,
-            not_attending=total - attending
+            not_attending=total - attending,
+            total_guests_attending=guests_attending,
+            total_guests_not_attending=guests_not_attending
         ))
 
     return stats
@@ -129,32 +144,49 @@ def export_rsvps(
     db: Session = Depends(get_db),
     _: bool = Depends(verify_token)
 ):
-    query = db.query(
-        models.RSVP.name,
-        models.RSVP.email,
-        models.RSVP.attending,
-        models.RSVP.submitted_at,
-        models.Event.name.label("event_name")
-    ).join(models.Event)
+    query = db.query(models.RSVP).join(models.Event)
 
     if event_slug:
         query = query.filter(models.Event.slug == event_slug)
 
-    results = query.order_by(models.Event.name, models.RSVP.submitted_at).all()
+    rsvps = query.order_by(models.Event.name, models.RSVP.submitted_at).all()
 
     # Create CSV in memory
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["Event", "Name", "Email", "Attending", "Submitted At"])
+    writer.writerow([
+        "Event", "Primary Contact", "Email", "Attending",
+        "Guest Count", "Guest Name", "Dietary Requirements",
+        "Is Primary", "Submitted At"
+    ])
 
-    for r in results:
-        writer.writerow([
-            r.event_name,
-            r.name,
-            r.email,
-            "Yes" if r.attending else "No",
-            r.submitted_at.strftime("%Y-%m-%d %H:%M:%S")
-        ])
+    for rsvp in rsvps:
+        # Write a row for each guest
+        for guest in rsvp.guests:
+            writer.writerow([
+                rsvp.event.name,
+                rsvp.name,
+                rsvp.email,
+                "Yes" if rsvp.attending else "No",
+                rsvp.guest_count,
+                guest.name,
+                guest.dietary_requirements or "",
+                "Yes" if guest.is_primary else "No",
+                rsvp.submitted_at.strftime("%Y-%m-%d %H:%M:%S")
+            ])
+        # If no guests (legacy data), still write the RSVP
+        if not rsvp.guests:
+            writer.writerow([
+                rsvp.event.name,
+                rsvp.name,
+                rsvp.email,
+                "Yes" if rsvp.attending else "No",
+                rsvp.guest_count,
+                rsvp.name,
+                "",
+                "Yes",
+                rsvp.submitted_at.strftime("%Y-%m-%d %H:%M:%S")
+            ])
 
     output.seek(0)
 

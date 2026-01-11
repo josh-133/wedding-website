@@ -14,7 +14,10 @@ security = HTTPBearer()
 def verify_password(plain_password: str) -> bool:
     """
     Verify password using constant-time comparison to prevent timing attacks.
+    Returns False if ADMIN_PASSWORD is not configured.
     """
+    if not config.ADMIN_PASSWORD:
+        return False
     return secrets.compare_digest(plain_password, config.ADMIN_PASSWORD)
 
 

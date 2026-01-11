@@ -1,15 +1,21 @@
 import os
+import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import init_db
 from .routers import rsvp, registry, admin
+from . import config
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Initialize database on startup."""
+    """Initialize database and check security on startup."""
     init_db()
+    config.check_security_config()
     yield
 
 

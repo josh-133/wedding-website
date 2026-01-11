@@ -16,9 +16,9 @@ defineProps({
         <p class="text-xs text-slate-400">responses</p>
       </div>
       <div class="bg-blue-50 rounded-xl p-4 shadow-sm border border-blue-100">
-        <p class="text-blue-500 text-sm mb-1">{{ stat.event_name }} Attending</p>
-        <p class="text-2xl font-bold text-blue-600">{{ stat.attending }}</p>
-        <p class="text-xs text-blue-400">confirmed</p>
+        <p class="text-blue-500 text-sm mb-1">{{ stat.event_name }} Guests</p>
+        <p class="text-2xl font-bold text-blue-600">{{ stat.total_guests_attending }}</p>
+        <p class="text-xs text-blue-400">attending</p>
       </div>
     </template>
   </div>

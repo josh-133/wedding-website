@@ -157,6 +157,118 @@ class TestRSVPEndpoints:
         })
         assert response.status_code == 422  # Validation error
 
+    def test_create_rsvp_with_guests(self, seeded_client):
+        """Test RSVP with multiple guests."""
+        response = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "John Smith",
+            "email": "john@example.com",
+            "attending": True,
+            "guests": [
+                {"name": "Jane Smith", "dietary_requirements": "Vegetarian"},
+                {"name": "Tommy Smith", "dietary_requirements": None}
+            ]
+        })
+        assert response.status_code == 200
+        rsvp = response.json()
+        assert rsvp["guest_count"] == 3
+        assert len(rsvp["guests"]) == 3  # Primary + 2 additional
+        guest_names = [g["name"] for g in rsvp["guests"]]
+        assert "John Smith" in guest_names
+        assert "Jane Smith" in guest_names
+        assert "Tommy Smith" in guest_names
+
+    def test_create_rsvp_max_guests(self, seeded_client):
+        """Test that max 5 guests are allowed."""
+        response = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "Primary Guest",
+            "email": "primary@example.com",
+            "attending": True,
+            "guests": [
+                {"name": "Guest 2"},
+                {"name": "Guest 3"},
+                {"name": "Guest 4"},
+                {"name": "Guest 5"}
+            ]
+        })
+        assert response.status_code == 200
+        assert response.json()["guest_count"] == 5
+
+    def test_create_rsvp_exceeds_max_guests(self, seeded_client):
+        """Test that more than 5 guests are rejected."""
+        response = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "Primary Guest",
+            "email": "primary@example.com",
+            "attending": True,
+            "guests": [
+                {"name": "Guest 2"},
+                {"name": "Guest 3"},
+                {"name": "Guest 4"},
+                {"name": "Guest 5"},
+                {"name": "Guest 6"}  # This exceeds the limit
+            ]
+        })
+        assert response.status_code == 422  # Validation error
+
+    def test_create_rsvp_not_attending_with_guests(self, seeded_client):
+        """Test declining RSVP with multiple guests."""
+        response = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "John Doe",
+            "email": "john@example.com",
+            "attending": False,
+            "guests": [
+                {"name": "Jane Doe"}
+            ]
+        })
+        assert response.status_code == 200
+        rsvp = response.json()
+        assert rsvp["attending"] is False
+        assert rsvp["guest_count"] == 2
+
+    def test_update_rsvp_with_guests(self, seeded_client):
+        """Test updating an RSVP changes guest list."""
+        # First RSVP with 2 guests
+        response1 = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "John Smith",
+            "email": "john@example.com",
+            "attending": True,
+            "guests": [{"name": "Jane Smith"}]
+        })
+        assert response1.json()["guest_count"] == 2
+
+        # Update with 3 guests
+        response2 = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "John Smith",
+            "email": "john@example.com",
+            "attending": True,
+            "guests": [
+                {"name": "Jane Smith"},
+                {"name": "Tommy Smith"}
+            ]
+        })
+        assert response2.json()["guest_count"] == 3
+        assert len(response2.json()["guests"]) == 3
+
+    def test_guest_dietary_requirements_sanitized(self, seeded_client):
+        """Test that dietary requirements have HTML stripped."""
+        response = seeded_client.post("/api/rsvp", json={
+            "event_slug": "wedding",
+            "name": "John Smith",
+            "email": "john@example.com",
+            "attending": True,
+            "guests": [
+                {"name": "Jane Smith", "dietary_requirements": "<script>alert('xss')</script>Vegetarian"}
+            ]
+        })
+        assert response.status_code == 200
+        guest = next(g for g in response.json()["guests"] if g["name"] == "Jane Smith")
+        assert "<script>" not in guest["dietary_requirements"]
+
 
 class TestRegistryEndpoint:
     """Tests for registry endpoint."""
@@ -227,18 +339,20 @@ class TestAdminEndpoints:
         assert rsvps[0]["event_slug"] == "wedding"
 
     def test_admin_get_stats(self, seeded_client, auth_headers):
-        # Create some RSVPs
+        # Create some RSVPs with guests
         seeded_client.post("/api/rsvp", json={
             "event_slug": "wedding",
             "name": "Guest 1",
             "email": "guest1@example.com",
-            "attending": True
+            "attending": True,
+            "guests": [{"name": "Guest 1 Partner"}]  # 2 guests attending
         })
         seeded_client.post("/api/rsvp", json={
             "event_slug": "wedding",
             "name": "Guest 2",
             "email": "guest2@example.com",
-            "attending": False
+            "attending": False,
+            "guests": [{"name": "Guest 2 Partner"}, {"name": "Guest 2 Child"}]  # 3 not attending
         })
 
         response = seeded_client.get("/api/admin/stats", headers=auth_headers)
@@ -250,6 +364,8 @@ class TestAdminEndpoints:
         assert wedding_stats["total_responses"] == 2
         assert wedding_stats["attending"] == 1
         assert wedding_stats["not_attending"] == 1
+        assert wedding_stats["total_guests_attending"] == 2
+        assert wedding_stats["total_guests_not_attending"] == 3
 
     def test_admin_export_rsvps(self, seeded_client, auth_headers):
         # Create an RSVP
@@ -284,3 +400,21 @@ class TestRateLimiting:
         response = seeded_client.post("/api/admin/login", json={"password": "wrong"})
         assert response.status_code == 429
         assert "Too many login attempts" in response.json()["detail"]
+
+
+class TestSecurityConfig:
+    """Tests for security configuration."""
+
+    def test_admin_login_disabled_when_no_password(self, seeded_client, monkeypatch):
+        """Test that admin login fails when ADMIN_PASSWORD is not set."""
+        from app import config
+        from app.routers import admin
+
+        # Clear any existing rate limiting
+        admin.login_attempts.clear()
+
+        monkeypatch.setattr(config, "ADMIN_PASSWORD", "")
+
+        response = seeded_client.post("/api/admin/login", json={"password": "anypassword"})
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Incorrect password"
