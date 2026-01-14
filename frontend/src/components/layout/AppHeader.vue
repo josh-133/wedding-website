@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const mobileMenuOpen = ref(false)
 
@@ -12,7 +13,32 @@ const navLinks = [
   { name: 'Engagement', path: '/engagement' },
   { name: 'Wedding', path: '/wedding' },
   { name: 'Registry', path: '/registry' },
+  { name: 'FAQ', path: '/#faq', isAnchor: true },
 ]
+
+function handleNavClick(link) {
+  if (link.isAnchor) {
+    // If already on homepage, scroll to anchor
+    if (route.path === '/') {
+      const element = document.getElementById('faq')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      // Navigate to homepage then scroll
+      router.push('/').then(() => {
+        setTimeout(() => {
+          const element = document.getElementById('faq')
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+          }
+        }, 100)
+      })
+    }
+    return true // handled
+  }
+  return false // use default router-link behavior
+}
 
 function handleLogout() {
   authStore.logout()
@@ -30,15 +56,24 @@ function handleLogout() {
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-8">
-          <router-link
-            v-for="link in navLinks"
-            :key="link.path"
-            :to="link.path"
-            class="text-slate-600 hover:text-blue-500 transition-colors font-medium"
-            active-class="text-blue-500"
-          >
-            {{ link.name }}
-          </router-link>
+          <template v-for="link in navLinks" :key="link.path">
+            <a
+              v-if="link.isAnchor"
+              href="#faq"
+              @click.prevent="handleNavClick(link)"
+              class="text-slate-600 hover:text-blue-500 transition-colors font-medium cursor-pointer"
+            >
+              {{ link.name }}
+            </a>
+            <router-link
+              v-else
+              :to="link.path"
+              class="text-slate-600 hover:text-blue-500 transition-colors font-medium"
+              active-class="text-blue-500"
+            >
+              {{ link.name }}
+            </router-link>
+          </template>
           <template v-if="authStore.isAuthenticated">
             <router-link
               to="/admin/dashboard"
@@ -82,16 +117,25 @@ function handleLogout() {
 
       <!-- Mobile Navigation -->
       <div v-if="mobileMenuOpen" class="md:hidden mt-4 pb-4 space-y-3">
-        <router-link
-          v-for="link in navLinks"
-          :key="link.path"
-          :to="link.path"
-          @click="mobileMenuOpen = false"
-          class="block text-slate-600 hover:text-blue-500 transition-colors font-medium py-2"
-          active-class="text-blue-500"
-        >
-          {{ link.name }}
-        </router-link>
+        <template v-for="link in navLinks" :key="link.path">
+          <a
+            v-if="link.isAnchor"
+            href="#faq"
+            @click.prevent="handleNavClick(link); mobileMenuOpen = false"
+            class="block text-slate-600 hover:text-blue-500 transition-colors font-medium py-2 cursor-pointer"
+          >
+            {{ link.name }}
+          </a>
+          <router-link
+            v-else
+            :to="link.path"
+            @click="mobileMenuOpen = false"
+            class="block text-slate-600 hover:text-blue-500 transition-colors font-medium py-2"
+            active-class="text-blue-500"
+          >
+            {{ link.name }}
+          </router-link>
+        </template>
         <template v-if="authStore.isAuthenticated">
           <router-link
             to="/admin/dashboard"
