@@ -23,12 +23,13 @@ onMounted(async () => {
 <template>
   <div class="py-12 px-4">
     <div class="max-w-4xl mx-auto text-center mb-8">
-      <router-link to="/" class="text-blue-400 hover:text-blue-500 text-sm mb-4 inline-block">
-        &larr; Back to Home
+      <router-link to="/" class="text-sage-500 hover:text-sage-600 text-sm mb-4 inline-flex items-center gap-2">
+        <span>🌿</span> Back to Home
       </router-link>
     </div>
 
-    <div class="card max-w-lg mx-auto text-center">
+    <div class="card max-w-lg mx-auto text-center bg-linear-to-br from-white via-lavender-50 to-blush-50 border-lavender-100">
+      <span class="text-4xl mb-4 block">🎁</span>
       <h1 class="font-serif text-3xl text-slate-800 mb-4">Our Registry</h1>
       <p class="text-slate-600 mb-8">
         Your presence at our celebration is the greatest gift of all.
