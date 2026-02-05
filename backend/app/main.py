@@ -28,7 +28,12 @@ app = FastAPI(
 
 # CORS configuration
 # Get allowed origins from environment or use defaults for development
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
+cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+cors_origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
+
+# Log CORS configuration for debugging
+logger = logging.getLogger(__name__)
+logger.info(f"CORS origins configured: {cors_origins}")
 
 app.add_middleware(
     CORSMiddleware,
