@@ -8,7 +8,10 @@ defineProps({
   }
 })
 
+const emit = defineEmits(['delete'])
+
 const expandedRows = ref(new Set())
+const confirmingDelete = ref(null)
 
 function toggleRow(id) {
   if (expandedRows.value.has(id)) {
@@ -32,6 +35,20 @@ function formatDate(dateStr) {
     minute: '2-digit'
   })
 }
+
+function handleDeleteClick(event, rsvpId) {
+  event.stopPropagation()
+  confirmingDelete.value = rsvpId
+}
+
+function confirmDelete(rsvpId) {
+  emit('delete', rsvpId)
+  confirmingDelete.value = null
+}
+
+function cancelDelete() {
+  confirmingDelete.value = null
+}
 </script>
 
 <template>
@@ -47,11 +64,12 @@ function formatDate(dateStr) {
             <th class="text-center px-4 py-3 text-sm font-medium text-slate-600">Guests</th>
             <th class="text-center px-4 py-3 text-sm font-medium text-slate-600">Attending</th>
             <th class="text-left px-4 py-3 text-sm font-medium text-slate-600">Submitted</th>
+            <th class="text-center px-4 py-3 text-sm font-medium text-slate-600">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
           <tr v-if="rsvps.length === 0">
-            <td colspan="7" class="px-4 py-8 text-center text-slate-400">
+            <td colspan="8" class="px-4 py-8 text-center text-slate-400">
               No RSVPs yet
             </td>
           </tr>
@@ -100,10 +118,36 @@ function formatDate(dateStr) {
                 </span>
               </td>
               <td class="px-4 py-3 text-slate-500 text-sm">{{ formatDate(rsvp.submitted_at) }}</td>
+              <td class="px-4 py-3 text-center">
+                <div v-if="confirmingDelete === rsvp.id" class="flex items-center justify-center gap-2">
+                  <button
+                    @click.stop="confirmDelete(rsvp.id)"
+                    class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    @click.stop="cancelDelete"
+                    class="px-2 py-1 bg-slate-300 text-slate-700 text-xs rounded hover:bg-slate-400"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <button
+                  v-else
+                  @click="handleDeleteClick($event, rsvp.id)"
+                  class="text-slate-400 hover:text-red-500 transition-colors"
+                  title="Delete RSVP"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </td>
             </tr>
             <!-- Expanded Guest Details -->
             <tr v-if="isExpanded(rsvp.id) && rsvp.guests && rsvp.guests.length > 0">
-              <td colspan="7" class="bg-slate-50 px-4 py-3">
+              <td colspan="8" class="bg-slate-50 px-4 py-3">
                 <div class="ml-8">
                   <p class="text-sm font-medium text-slate-600 mb-2">Guest Details:</p>
                   <div class="grid gap-2">

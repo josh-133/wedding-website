@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import { getAdminRsvps, getAdminStats, exportRsvps } from '../api'
+import { getAdminRsvps, getAdminStats, exportRsvps, deleteRsvp } from '../api'
 import StatsCards from '../components/admin/StatsCards.vue'
 import RsvpTable from '../components/admin/RsvpTable.vue'
 
@@ -52,6 +52,17 @@ async function handleExport() {
     console.error('Export failed:', err)
   } finally {
     exportLoading.value = false
+  }
+}
+
+async function handleDelete(rsvpId) {
+  try {
+    await deleteRsvp(rsvpId)
+    // Reload data after deletion
+    await loadData()
+  } catch (err) {
+    console.error('Delete failed:', err)
+    alert('Failed to delete RSVP. Please try again.')
   }
 }
 
@@ -110,7 +121,7 @@ onMounted(() => {
         </div>
 
         <!-- Table -->
-        <RsvpTable :rsvps="rsvps" />
+        <RsvpTable :rsvps="rsvps" @delete="handleDelete" />
       </template>
     </div>
   </div>

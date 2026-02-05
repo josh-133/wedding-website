@@ -30,7 +30,7 @@ const scheduleInfo = {
   },
   wedding: {
     date: 'Saturday, 22nd May 2027',
-    ceremonyTime: '3:00 PM',
+    ceremonyTime: '2:30 PM for a 3:00 PM start',
     receptionTime: '5:00 PM - Midnight',
     details: 'Ceremony followed by cocktail hour and reception dinner'
   }

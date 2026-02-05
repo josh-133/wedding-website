@@ -9,6 +9,21 @@ from . import config
 
 logger = logging.getLogger(__name__)
 
+# Event-specific details
+EVENT_DETAILS = {
+    "engagement": {
+        "time": "4:00 PM - 8:00 PM",
+        "venue_name": "Beefacres Hall",
+        "venue_address": "14 Pittwater Dr, Windsor Gardens SA 5087"
+    },
+    "wedding": {
+        "ceremony_time": "2:30 PM for a 3:00 PM start",
+        "reception_time": "5:00 PM - Midnight",
+        "venue_name": "Mount Lofty House",
+        "venue_address": "1 Mawson Dr, Crafers SA 5152"
+    }
+}
+
 
 def format_date(event_date: date) -> str:
     """Format date for display in emails."""
@@ -38,9 +53,54 @@ def format_guest_list_text(guest_names: List[str]) -> str:
     return guests_text
 
 
+def get_event_details_html(event_slug: str, event_date: date) -> str:
+    """Get event-specific details as HTML."""
+    formatted_date = format_date(event_date)
+
+    if event_slug == "engagement":
+        details = EVENT_DETAILS["engagement"]
+        return f"""
+        <p><strong>Date:</strong> {formatted_date}</p>
+        <p><strong>Time:</strong> {details['time']}</p>
+        <p><strong>Venue:</strong> {details['venue_name']}<br>
+        <span style="color: #64748b;">{details['venue_address']}</span></p>
+        """
+    elif event_slug == "wedding":
+        details = EVENT_DETAILS["wedding"]
+        return f"""
+        <p><strong>Date:</strong> {formatted_date}</p>
+        <p><strong>Ceremony:</strong> {details['ceremony_time']}</p>
+        <p><strong>Reception:</strong> {details['reception_time']}</p>
+        <p><strong>Venue:</strong> {details['venue_name']}<br>
+        <span style="color: #64748b;">{details['venue_address']}</span></p>
+        """
+    return f"<p><strong>Date:</strong> {formatted_date}</p>"
+
+
+def get_event_details_text(event_slug: str, event_date: date) -> str:
+    """Get event-specific details as plain text."""
+    formatted_date = format_date(event_date)
+
+    if event_slug == "engagement":
+        details = EVENT_DETAILS["engagement"]
+        return f"""Date: {formatted_date}
+Time: {details['time']}
+Venue: {details['venue_name']}
+       {details['venue_address']}"""
+    elif event_slug == "wedding":
+        details = EVENT_DETAILS["wedding"]
+        return f"""Date: {formatted_date}
+Ceremony: {details['ceremony_time']}
+Reception: {details['reception_time']}
+Venue: {details['venue_name']}
+       {details['venue_address']}"""
+    return f"Date: {formatted_date}"
+
+
 def get_confirmation_email_html(
     guest_name: str,
     event_name: str,
+    event_slug: str,
     event_date: date,
     attending: bool,
     guest_names: Optional[List[str]] = None,
@@ -48,27 +108,56 @@ def get_confirmation_email_html(
 ) -> str:
     """Generate HTML email content for RSVP confirmation."""
     formatted_date = format_date(event_date)
-
-    # Use guest_names if provided, otherwise just the primary guest
     all_guests = guest_names if guest_names else [guest_name]
     guest_list_html = format_guest_list_html(all_guests)
+    event_details_html = get_event_details_html(event_slug, event_date)
 
     if attending:
-        party_text = f"{guest_count} guest{'s' if guest_count > 1 else ''}" if guest_count > 1 else "you"
-        message = f"""
-        <p>We're thrilled that {party_text} will be joining us for our <strong>{event_name}</strong>!</p>
-        <p><strong>Date:</strong> {formatted_date}</p>
-        {guest_list_html}
-        <p>We can't wait to celebrate with you. More details will follow closer to the date.</p>
-        """
+        party_text = f"your party of {guest_count}" if guest_count > 1 else "you"
+
+        if event_slug == "engagement":
+            message = f"""
+            <p>We're so excited that {party_text} will be joining us for our <strong>Engagement Party</strong>!</p>
+            {event_details_html}
+            {guest_list_html}
+            <p>We can't wait to celebrate this special milestone with you!</p>
+            """
+        elif event_slug == "wedding":
+            message = f"""
+            <p>We're thrilled that {party_text} will be sharing our <strong>Wedding Day</strong> with us!</p>
+            {event_details_html}
+            {guest_list_html}
+            <p>More details will follow closer to the date. We can't wait to celebrate with you!</p>
+            """
+        else:
+            message = f"""
+            <p>We're thrilled that {party_text} will be joining us for our <strong>{event_name}</strong>!</p>
+            {event_details_html}
+            {guest_list_html}
+            <p>We can't wait to celebrate with you!</p>
+            """
         subject_status = "Confirmed"
     else:
-        party_text = f"your party of {guest_count}" if guest_count > 1 else "you"
-        message = f"""
-        <p>We're sorry {party_text} won't be able to make it to our <strong>{event_name}</strong> on {formatted_date}.</p>
-        {guest_list_html}
-        <p>We'll miss having you there, but we understand. Thank you for letting us know!</p>
-        """
+        party_text = f"your party" if guest_count > 1 else "you"
+
+        if event_slug == "engagement":
+            message = f"""
+            <p>We're sorry {party_text} won't be able to join us for our <strong>Engagement Party</strong> on {formatted_date}.</p>
+            {guest_list_html}
+            <p>We'll miss you, but we appreciate you taking the time to respond.</p>
+            """
+        elif event_slug == "wedding":
+            message = f"""
+            <p>We're sorry {party_text} won't be able to join us for our <strong>Wedding</strong> on {formatted_date}.</p>
+            {guest_list_html}
+            <p>You'll be in our thoughts on the day. Thank you for being part of our journey.</p>
+            """
+        else:
+            message = f"""
+            <p>We're sorry {party_text} won't be able to make it to our <strong>{event_name}</strong> on {formatted_date}.</p>
+            {guest_list_html}
+            <p>We'll miss having you there, but we understand. Thank you for letting us know!</p>
+            """
         subject_status = "Received"
 
     html = f"""
@@ -107,6 +196,7 @@ def get_confirmation_email_html(
 def get_confirmation_email_text(
     guest_name: str,
     event_name: str,
+    event_slug: str,
     event_date: date,
     attending: bool,
     guest_names: Optional[List[str]] = None,
@@ -114,23 +204,54 @@ def get_confirmation_email_text(
 ) -> str:
     """Generate plain text email content for RSVP confirmation."""
     formatted_date = format_date(event_date)
-
-    # Use guest_names if provided, otherwise just the primary guest
     all_guests = guest_names if guest_names else [guest_name]
     guest_list_text = format_guest_list_text(all_guests)
+    event_details_text = get_event_details_text(event_slug, event_date)
 
     if attending:
-        party_text = f"{guest_count} guest{'s' if guest_count > 1 else ''}" if guest_count > 1 else "you"
-        message = f"""We're thrilled that {party_text} will be joining us for our {event_name}!
+        party_text = f"your party of {guest_count}" if guest_count > 1 else "you"
 
-Date: {formatted_date}
+        if event_slug == "engagement":
+            message = f"""We're so excited that {party_text} will be joining us for our Engagement Party!
+
+{event_details_text}
 
 {guest_list_text}
 
-We can't wait to celebrate with you. More details will follow closer to the date."""
+We can't wait to celebrate this special milestone with you!"""
+        elif event_slug == "wedding":
+            message = f"""We're thrilled that {party_text} will be sharing our Wedding Day with us!
+
+{event_details_text}
+
+{guest_list_text}
+
+More details will follow closer to the date. We can't wait to celebrate with you!"""
+        else:
+            message = f"""We're thrilled that {party_text} will be joining us for our {event_name}!
+
+{event_details_text}
+
+{guest_list_text}
+
+We can't wait to celebrate with you!"""
     else:
-        party_text = f"your party of {guest_count}" if guest_count > 1 else "you"
-        message = f"""We're sorry {party_text} won't be able to make it to our {event_name} on {formatted_date}.
+        party_text = f"your party" if guest_count > 1 else "you"
+
+        if event_slug == "engagement":
+            message = f"""We're sorry {party_text} won't be able to join us for our Engagement Party on {formatted_date}.
+
+{guest_list_text}
+
+We'll miss you, but we appreciate you taking the time to respond."""
+        elif event_slug == "wedding":
+            message = f"""We're sorry {party_text} won't be able to join us for our Wedding on {formatted_date}.
+
+{guest_list_text}
+
+You'll be in our thoughts on the day. Thank you for being part of our journey."""
+        else:
+            message = f"""We're sorry {party_text} won't be able to make it to our {event_name} on {formatted_date}.
 
 {guest_list_text}
 
@@ -155,6 +276,7 @@ def send_rsvp_confirmation(
     to_email: str,
     guest_name: str,
     event_name: str,
+    event_slug: str,
     event_date: date,
     attending: bool,
     guest_names: Optional[List[str]] = None,
@@ -182,10 +304,10 @@ def send_rsvp_confirmation(
 
         # Create plain text and HTML versions
         text_content = get_confirmation_email_text(
-            guest_name, event_name, event_date, attending, guest_names, guest_count
+            guest_name, event_name, event_slug, event_date, attending, guest_names, guest_count
         )
         html_content = get_confirmation_email_html(
-            guest_name, event_name, event_date, attending, guest_names, guest_count
+            guest_name, event_name, event_slug, event_date, attending, guest_names, guest_count
         )
 
         msg.attach(MIMEText(text_content, "plain"))

@@ -138,6 +138,31 @@ def get_stats(db: Session = Depends(get_db), _: bool = Depends(verify_token)):
     return stats
 
 
+@router.delete("/rsvps/{rsvp_id}")
+def delete_rsvp(
+    rsvp_id: int,
+    db: Session = Depends(get_db),
+    _: bool = Depends(verify_token)
+):
+    """Delete an RSVP and all associated guests."""
+    rsvp = db.query(models.RSVP).filter(models.RSVP.id == rsvp_id).first()
+
+    if not rsvp:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="RSVP not found"
+        )
+
+    # Delete associated guests first
+    db.query(models.Guest).filter(models.Guest.rsvp_id == rsvp_id).delete()
+
+    # Delete the RSVP
+    db.delete(rsvp)
+    db.commit()
+
+    return {"message": "RSVP deleted successfully"}
+
+
 @router.get("/rsvps/export")
 def export_rsvps(
     event_slug: Optional[str] = None,

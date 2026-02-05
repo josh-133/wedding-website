@@ -33,6 +33,7 @@ export const getAdminRsvps = (eventSlug = null) => {
   return api.get('/admin/rsvps', { params })
 }
 export const getAdminStats = () => api.get('/admin/stats')
+export const deleteRsvp = (rsvpId) => api.delete(`/admin/rsvps/${rsvpId}`)
 export const exportRsvps = (eventSlug = null) => {
   const params = eventSlug ? { event_slug: eventSlug } : {}
   return api.get('/admin/rsvps/export', {
