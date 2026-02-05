@@ -3,11 +3,15 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import date
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "data")
-os.makedirs(DATA_DIR, exist_ok=True)
+# Use DATABASE_URL from environment, with fallback to local data directory
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASE_URL = f"sqlite:///{os.path.join(DATA_DIR, 'wedding.db')}"
+if not DATABASE_URL:
+    # Local development fallback
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "data")
+    os.makedirs(DATA_DIR, exist_ok=True)
+    DATABASE_URL = f"sqlite:///{os.path.join(DATA_DIR, 'wedding.db')}"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
