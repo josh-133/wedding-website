@@ -287,12 +287,22 @@ def send_rsvp_confirmation(
 
     Returns True if email was sent successfully, False otherwise.
     """
+    # Debug logging for email configuration
+    logger.info(f"Attempting to send email to {to_email}")
+    logger.info(f"EMAIL_ENABLED: {config.EMAIL_ENABLED}")
+    logger.info(f"SMTP_HOST: {config.SMTP_HOST or '(not set)'}")
+    logger.info(f"SMTP_PORT: {config.SMTP_PORT}")
+    logger.info(f"SMTP_USER: {config.SMTP_USER or '(not set)'}")
+    logger.info(f"SMTP_PASSWORD: {'(set)' if config.SMTP_PASSWORD else '(not set)'}")
+    logger.info(f"SMTP_FROM_EMAIL: {config.SMTP_FROM_EMAIL or '(not set)'}")
+
     if not config.EMAIL_ENABLED:
         logger.info(f"Email disabled - would send confirmation to {to_email}")
         return True
 
     if not all([config.SMTP_HOST, config.SMTP_USER, config.SMTP_PASSWORD, config.SMTP_FROM_EMAIL]):
         logger.warning("Email configuration incomplete - skipping email send")
+        logger.warning(f"Missing: HOST={bool(config.SMTP_HOST)}, USER={bool(config.SMTP_USER)}, PASS={bool(config.SMTP_PASSWORD)}, FROM={bool(config.SMTP_FROM_EMAIL)}")
         return False
 
     try:
