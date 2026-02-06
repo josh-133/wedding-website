@@ -30,6 +30,11 @@ def format_date(event_date: date) -> str:
     return event_date.strftime("%A, %d %B %Y")
 
 
+def get_first_name(full_name: str) -> str:
+    """Extract the first name from a full name."""
+    return full_name.strip().split()[0] if full_name.strip() else full_name
+
+
 def format_guest_list_html(guest_names: List[str]) -> str:
     """Format guest names as HTML list."""
     if len(guest_names) == 1:
@@ -108,6 +113,7 @@ def get_confirmation_email_html(
 ) -> str:
     """Generate HTML email content for RSVP confirmation."""
     formatted_date = format_date(event_date)
+    first_name = get_first_name(guest_name)
     all_guests = guest_names if guest_names else [guest_name]
     guest_list_html = format_guest_list_html(all_guests)
     event_details_html = get_event_details_html(event_slug, event_date)
@@ -175,7 +181,7 @@ def get_confirmation_email_html(
             </div>
 
             <div style="color: #334155; font-size: 16px; line-height: 1.6;">
-                <p>Dear {guest_name},</p>
+                <p>Dear {first_name},</p>
                 <p>Thank you for responding to our invitation!</p>
                 {message}
                 <p>With love,<br>Isabella & Joshua</p>
@@ -204,6 +210,7 @@ def get_confirmation_email_text(
 ) -> str:
     """Generate plain text email content for RSVP confirmation."""
     formatted_date = format_date(event_date)
+    first_name = get_first_name(guest_name)
     all_guests = guest_names if guest_names else [guest_name]
     guest_list_text = format_guest_list_text(all_guests)
     event_details_text = get_event_details_text(event_slug, event_date)
@@ -257,7 +264,7 @@ You'll be in our thoughts on the day. Thank you for being part of our journey.""
 
 We'll miss having you there, but we understand. Thank you for letting us know!"""
 
-    text = f"""Dear {guest_name},
+    text = f"""Dear {first_name},
 
 Thank you for responding to our invitation!
 

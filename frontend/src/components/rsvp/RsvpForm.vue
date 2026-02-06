@@ -288,6 +288,10 @@ function resetForm() {
           Submit RSVP for {{ totalGuestCount }} {{ totalGuestCount === 1 ? 'Guest' : 'Guests' }}
         </span>
       </button>
+
+      <p class="text-center text-slate-500 text-sm mt-4">
+        <strong>Note:</strong> Please check your spam/junk folder if you don't receive a confirmation email.
+      </p>
     </form>
   </div>
 </template>
