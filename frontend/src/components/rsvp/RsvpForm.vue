@@ -289,9 +289,11 @@ function resetForm() {
         </span>
       </button>
 
-      <p class="text-center text-slate-500 text-sm mt-4">
-        <strong>Note:</strong> Please check your spam/junk folder if you don't receive a confirmation email.
-      </p>
+      <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg text-center">
+        <p class="text-amber-800 text-sm font-medium">
+          Please check your spam/junk folder if you don't receive a confirmation email.
+        </p>
+      </div>
     </form>
   </div>
 </template>
