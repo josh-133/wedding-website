@@ -69,39 +69,39 @@ const dressCodeInfo = {
   ]
 }
 
-// FAQ items - UPDATE THESE PLACEHOLDERS
+// FAQ items
 const faqItems = [
   {
     question: 'Can I bring a plus one?',
-    answer: '[ANSWER - e.g., Your invitation will specify if you have a plus one. If you\'re unsure, please reach out to us directly.]'
+    answer: 'Your invitation will specify if you have a plus one. If you\'re unsure, please reach out to us directly.'
   },
   {
     question: 'Are children welcome?',
-    answer: '[ANSWER - e.g., While we love your little ones, our wedding will be an adults-only celebration. We hope this gives you a chance to enjoy a night out!]'
+    answer: 'While we love your little ones, our wedding will be an adults-only celebration. We hope this gives you a chance to enjoy a night out! If you have any concerns, please reach out to us as exceptions can be made.'
   },
   {
     question: 'Where should I park?',
-    answer: '[ANSWER - e.g., Free parking is available at the venue. Please see the venue section above for specific details.]'
+    answer: 'Free parking is available at the venue. Please see the venue section above for specific details.'
   },
   {
     question: 'What if I have dietary restrictions?',
-    answer: '[ANSWER - e.g., Please let us know your dietary requirements when you RSVP. We\'re happy to accommodate allergies and dietary preferences.]'
+    answer: 'Please let us know your dietary requirements when you RSVP. We\'re happy to accommodate allergies and dietary preferences.'
   },
   {
     question: 'When is the RSVP deadline?',
-    answer: '[ANSWER - e.g., Please RSVP by [DATE] so we can finalize catering and seating arrangements.]'
+    answer: 'Please RSVP as soon as possible so we can finalize catering and seating arrangements.'
   },
   {
     question: 'Is there accommodation nearby?',
-    answer: '[ANSWER - e.g., Yes! We recommend the Hilton Hotel which is a 5-minute drive from the venue. We\'ve arranged a group rate - use code WEDDING2027 when booking.]'
+    answer: 'Yes! We recommend the Hilton Hotel which is a 5-minute drive from the venue. We\'ve arranged a group rate - use code WEDDING2027 when booking.'
   },
   {
     question: 'What time should I arrive?',
-    answer: '[ANSWER - e.g., Please arrive 15-30 minutes before the ceremony start time to find your seats.]'
+    answer: 'Please arrive 15-30 minutes before the ceremony start time to find your seats.'
   },
   {
     question: 'Will there be an open bar?',
-    answer: '[ANSWER - e.g., Yes! We\'ll have a full open bar throughout the reception.]'
+    answer: 'Yes! We\'ll have a full open bar throughout the reception.'
   }
 ]
 
