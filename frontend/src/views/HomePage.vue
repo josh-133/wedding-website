@@ -115,7 +115,7 @@ onMounted(async () => {
 <template>
   <div class="bg-blue-50">
     <!-- Hero/Welcome Section -->
-    <section class="py-16 px-4">
+    <section class="pt-32 pb-28 px-4">
       <div class="max-w-4xl mx-auto text-center">
         <div class="flex items-center justify-center gap-3 mb-4">
           <span class="text-sage-400 text-lg">🌿</span>
@@ -133,8 +133,11 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+
     <!-- Our Celebrations Section -->
-    <section class="py-16 px-4">
+    <section class="py-28 px-4">
       <div class="max-w-6xl mx-auto">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Our Celebrations</h2>
 
@@ -258,8 +261,11 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+
     <!-- Registry Section -->
-    <section class="py-16 px-4">
+    <section class="py-28 px-4">
       <div class="max-w-4xl mx-auto text-center">
         <span class="text-5xl mb-6 block">🎁</span>
         <h2 class="font-serif text-3xl text-slate-800 mb-4">Gift Registry</h2>
@@ -272,8 +278,11 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+
     <!-- FAQ Section -->
-    <section id="faq" class="py-16 px-4 scroll-mt-24">
+    <section id="faq" class="py-28 px-4 scroll-mt-24">
       <div class="max-w-4xl mx-auto">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Frequently Asked Questions</h2>
 
