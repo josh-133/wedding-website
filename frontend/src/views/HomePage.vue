@@ -58,17 +58,6 @@ const venueInfo = {
   }
 }
 
-// Dress code information (shared for both events)
-const dressCodeInfo = {
-  code: 'Garden Party Formal',
-  description: 'Attire is Garden Party Formal. If you\'d like to embrace the theme further, feel free to be imaginative with bright & pastel colors, florals, etc, but any daytime formal attire is appropriate. We suggest lightweight suits for men and airy long dresses for women. We kindly ask ladies to avoid wearing blue so as not to match our bridesmaids.',
-  images: [
-    { src: '/images/outfit-inspiration-1.jpg', alt: 'Outfit inspiration 1' },
-    { src: '/images/outfit-inspiration-2.jpg', alt: 'Outfit inspiration 2' },
-    { src: '/images/outfit-inspiration-3.jpg', alt: 'Outfit inspiration 3' }
-  ]
-}
-
 // FAQ items
 const faqItems = [
   {
@@ -90,6 +79,10 @@ const faqItems = [
   {
     question: 'What time should I arrive?',
     answer: 'Please arrive 15-30 minutes before the ceremony start time to find your seats.'
+  },
+  {
+    question: 'What is the dress code?',
+    answer: 'Attire is Garden Formal. If you\'d like to embrace the theme further, feel free to be imaginative with bright & pastel colors, florals, etc, but any daytime formal attire is appropriate. We suggest lightweight suits for men and airy long dresses for women. We kindly ask ladies to avoid wearing blue so as not to match our bridesmaids.'
   }
 ]
 
@@ -120,9 +113,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <!-- Hero/Welcome Section - Light Blue -->
-    <section class="bg-blue-50 py-16 px-4">
+  <div class="bg-blue-50">
+    <!-- Hero/Welcome Section -->
+    <section class="py-16 px-4">
       <div class="max-w-4xl mx-auto text-center">
         <div class="flex items-center justify-center gap-3 mb-4">
           <span class="text-sage-400 text-lg">🌿</span>
@@ -140,8 +133,8 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Our Celebrations Section - Light Pink -->
-    <section class="bg-pink-50 py-16 px-4">
+    <!-- Our Celebrations Section -->
+    <section class="py-16 px-4">
       <div class="max-w-6xl mx-auto">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Our Celebrations</h2>
 
@@ -262,23 +255,11 @@ onMounted(async () => {
           </div>
         </div>
 
-        <!-- Shared Dress Code Section -->
-        <div class="mt-8 p-6 bg-white/80 rounded-xl text-center max-w-4xl mx-auto border border-sage-100">
-          <div class="flex items-center justify-center gap-2 mb-3">
-            <span class="text-sage-500 text-xl">🌸</span>
-            <span class="font-serif text-xl text-slate-800">Dress Code</span>
-            <span class="bg-sage-100 text-sage-600 px-3 py-1 rounded-full text-sm font-medium">
-              {{ dressCodeInfo.code }}
-            </span>
-          </div>
-          <p class="text-sm text-sage-500 font-medium mb-3">For both the Engagement Party & Wedding</p>
-          <p class="text-slate-600">{{ dressCodeInfo.description }}</p>
-        </div>
       </div>
     </section>
 
-    <!-- Registry Section - Light Green -->
-    <section class="bg-green-50 py-16 px-4">
+    <!-- Registry Section -->
+    <section class="py-16 px-4">
       <div class="max-w-4xl mx-auto text-center">
         <span class="text-5xl mb-6 block">🎁</span>
         <h2 class="font-serif text-3xl text-slate-800 mb-4">Gift Registry</h2>
@@ -291,8 +272,8 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- FAQ Section - Light Purple -->
-    <section id="faq" class="bg-purple-50 py-16 px-4 scroll-mt-24">
+    <!-- FAQ Section -->
+    <section id="faq" class="py-16 px-4 scroll-mt-24">
       <div class="max-w-4xl mx-auto">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Frequently Asked Questions</h2>
 
