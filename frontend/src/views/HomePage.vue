@@ -73,35 +73,23 @@ const dressCodeInfo = {
 const faqItems = [
   {
     question: 'Can I bring a plus one?',
-    answer: 'Your invitation will specify if you have a plus one. If you\'re unsure, please reach out to us directly.'
+    answer: 'If you\'ve been given a plus one, a separate invitation will be sent to them. If you have any questions, please don\'t hesitate to reach out to us.'
   },
   {
     question: 'Are children welcome?',
-    answer: 'While we love your little ones, our wedding will be an adults-only celebration. We hope this gives you a chance to enjoy a night out! If you have any concerns, please reach out to us as exceptions can be made.'
-  },
-  {
-    question: 'Where should I park?',
-    answer: 'Free parking is available at the venue. Please see the venue section above for specific details.'
-  },
-  {
-    question: 'What if I have dietary restrictions?',
-    answer: 'Please let us know your dietary requirements when you RSVP. We\'re happy to accommodate allergies and dietary preferences.'
+    answer: 'While we love your little ones, our wedding will be an adults-only celebration. We hope this gives you a chance to enjoy a night out! The only exceptions will be made for family travelling from afar.'
   },
   {
     question: 'When is the RSVP deadline?',
-    answer: 'Please RSVP as soon as possible so we can finalize catering and seating arrangements.'
+    answer: 'Please RSVP for the wedding by 31st March 2027 so we can finalize catering and seating arrangements.'
   },
   {
     question: 'Is there accommodation nearby?',
-    answer: 'Yes! We recommend the Hilton Hotel which is a 5-minute drive from the venue. We\'ve arranged a group rate - use code WEDDING2027 when booking.'
+    answer: 'If you would like to book accommodation, please contact our wedding coordinator Crystal Bihun on 08 8130 9237 or wedding.coordinator@mtloftyhouse.com.au for further information.'
   },
   {
     question: 'What time should I arrive?',
     answer: 'Please arrive 15-30 minutes before the ceremony start time to find your seats.'
-  },
-  {
-    question: 'Will there be an open bar?',
-    answer: 'Yes! We\'ll have a full open bar throughout the reception.'
   }
 ]
 
