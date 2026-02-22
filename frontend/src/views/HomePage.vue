@@ -143,9 +143,6 @@ onMounted(async () => {
       <h1 class="font-serif text-5xl md:text-6xl text-slate-800 mb-4">
         Isabella & Joshua
       </h1>
-      <p class="text-sage-600 font-medium text-xl mb-6">
-        Saturday, 22nd May 2027
-      </p>
       <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
         Thank you for being part of our story. We're so grateful to have you in our lives
         and can't wait to celebrate these special moments with you. Your presence means
