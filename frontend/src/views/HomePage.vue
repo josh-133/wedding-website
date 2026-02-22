@@ -120,169 +120,166 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="py-12 px-4">
-    <!-- Hero/Welcome Section -->
-    <section class="max-w-4xl mx-auto text-center mb-16">
-      <div class="flex items-center justify-center gap-3 mb-4">
-        <span class="text-sage-400 text-lg">🌿</span>
-        <p class="text-sage-500 uppercase tracking-widest text-sm">You're Invited</p>
-        <span class="text-sage-400 text-lg">🌿</span>
-      </div>
-      <h1 class="font-serif text-5xl md:text-6xl text-slate-800 mb-4">
-        Isabella & Joshua
-      </h1>
-      <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-        Thank you for being part of our story. We're so grateful to have you in our lives
-        and can't wait to celebrate these special moments with you. Your presence means
-        the world to us!
-      </p>
-    </section>
-
-    <!-- Decorative Botanical Divider -->
-    <div class="flex items-center justify-center gap-4 mb-16">
-      <div class="h-px bg-gradient-to-r from-transparent via-sage-300 to-transparent w-32"></div>
-      <span class="text-sage-400 text-2xl">🌿</span>
-      <div class="h-px bg-gradient-to-r from-transparent via-sage-300 to-transparent w-32"></div>
-    </div>
-
-    <!-- Our Celebrations Section (Side by Side) -->
-    <section class="max-w-6xl mx-auto mb-16">
-      <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Our Celebrations</h2>
-
-      <div v-if="loading" class="text-center py-12">
-        <div class="animate-pulse text-blue-400">Loading events...</div>
-      </div>
-
-      <div v-else class="grid md:grid-cols-2 gap-8">
-        <!-- Engagement Party (Left) -->
-        <div class="card flex flex-col bg-gradient-to-br from-white to-blush-50 border-blush-100">
-          <div class="text-center mb-6">
-            <span class="text-4xl mb-3 block">💍</span>
-            <h3 class="font-serif text-2xl text-slate-800 mb-2">Engagement Party</h3>
-            <p class="text-blue-500 font-medium">{{ scheduleInfo.engagement.date }}</p>
-            <p class="text-slate-600">{{ scheduleInfo.engagement.time }}</p>
-          </div>
-
-          <div class="mb-6">
-            <p class="font-medium text-slate-800 text-lg">{{ venueInfo.engagement.name }}</p>
-            <p class="text-slate-600">{{ venueInfo.engagement.address }}</p>
-            <p class="text-slate-600 mb-3">{{ venueInfo.engagement.city }}</p>
-
-            <div class="bg-slate-100 rounded-lg overflow-hidden aspect-video mb-3">
-              <iframe
-                :src="venueInfo.engagement.mapsEmbed"
-                width="100%"
-                height="100%"
-                style="border:0; min-height: 180px;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                class="w-full h-full"
-              ></iframe>
-            </div>
-
-            <a
-              :href="venueInfo.engagement.mapsUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium text-sm"
-            >
-              <span>📍</span> Get Directions
-            </a>
-          </div>
-
-          <div class="mb-6">
-            <p class="text-sm text-slate-600 mb-2">{{ scheduleInfo.engagement.details }}</p>
-            <div class="space-y-1 text-sm text-slate-600">
-              <p><span class="font-medium">Parking:</span> {{ venueInfo.engagement.parking }}</p>
-            </div>
-          </div>
-
-          <!-- RSVP Button -->
-          <div class="mt-auto text-center">
-            <router-link
-              to="/engagement"
-              class="btn-primary inline-block w-full py-3"
-            >
-              RSVP for Engagement Party
-            </router-link>
-          </div>
+  <div>
+    <!-- Hero/Welcome Section - Light Blue -->
+    <section class="bg-blue-50 py-16 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <span class="text-sage-400 text-lg">🌿</span>
+          <p class="text-sage-500 uppercase tracking-widest text-sm">You're Invited</p>
+          <span class="text-sage-400 text-lg">🌿</span>
         </div>
-
-        <!-- Wedding (Right) -->
-        <div class="card flex flex-col bg-gradient-to-br from-white to-lavender-50 border-lavender-100">
-          <div class="text-center mb-6">
-            <span class="text-4xl mb-3 block">💒</span>
-            <h3 class="font-serif text-2xl text-slate-800 mb-2">Wedding Day</h3>
-            <p class="text-blue-500 font-medium">{{ scheduleInfo.wedding.date }}</p>
-            <p class="text-slate-600">Ceremony: {{ scheduleInfo.wedding.ceremonyTime }} | Reception: {{ scheduleInfo.wedding.receptionTime }}</p>
-          </div>
-
-          <div class="mb-6">
-            <p class="font-medium text-slate-800 text-lg">{{ venueInfo.wedding.name }}</p>
-            <p class="text-slate-600">{{ venueInfo.wedding.address }}</p>
-            <p class="text-slate-600 mb-3">{{ venueInfo.wedding.city }}</p>
-
-            <div class="bg-slate-100 rounded-lg overflow-hidden aspect-video mb-3">
-              <iframe
-                :src="venueInfo.wedding.mapsEmbed"
-                width="100%"
-                height="100%"
-                style="border:0; min-height: 180px;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                class="w-full h-full"
-              ></iframe>
-            </div>
-
-            <a
-              :href="venueInfo.wedding.mapsUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium text-sm"
-            >
-              <span>📍</span> Get Directions
-            </a>
-          </div>
-
-          <div class="mb-6">
-            <p class="text-sm text-slate-600 mb-2">{{ scheduleInfo.wedding.details }}</p>
-            <div class="space-y-1 text-sm text-slate-600">
-              <p><span class="font-medium">Parking:</span> {{ venueInfo.wedding.parking }}</p>
-              <p v-if="venueInfo.wedding.accommodation"><span class="font-medium">Accommodation:</span> {{ venueInfo.wedding.accommodation }}</p>
-            </div>
-          </div>
-
-          <!-- RSVP Button -->
-          <div class="mt-auto text-center">
-            <router-link
-              to="/wedding"
-              class="btn-primary inline-block w-full py-3"
-            >
-              RSVP for Wedding
-            </router-link>
-          </div>
-        </div>
-      </div>
-
-      <!-- Shared Dress Code Section -->
-      <div class="mt-8 p-6 bg-gradient-to-br from-sage-50 via-white to-blush-50 rounded-xl text-center max-w-4xl mx-auto border border-sage-100">
-        <div class="flex items-center justify-center gap-2 mb-3">
-          <span class="text-sage-500 text-xl">🌸</span>
-          <span class="font-serif text-xl text-slate-800">Dress Code</span>
-          <span class="bg-sage-100 text-sage-600 px-3 py-1 rounded-full text-sm font-medium">
-            {{ dressCodeInfo.code }}
-          </span>
-        </div>
-        <p class="text-sm text-sage-500 font-medium mb-3">For both the Engagement Party & Wedding</p>
-        <p class="text-slate-600">{{ dressCodeInfo.description }}</p>
+        <h1 class="font-serif text-5xl md:text-6xl text-slate-800 mb-4">
+          Isabella & Joshua
+        </h1>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          Thank you for being part of our story. We're so grateful to have you in our lives
+          and can't wait to celebrate these special moments with you. Your presence means
+          the world to us!
+        </p>
       </div>
     </section>
 
-    <!-- Registry Section -->
-    <section class="max-w-4xl mx-auto text-center mb-16">
-      <div class="card py-12 bg-gradient-to-br from-white via-lavender-50 to-blush-50 border-lavender-100">
+    <!-- Our Celebrations Section - Light Pink -->
+    <section class="bg-pink-50 py-16 px-4">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Our Celebrations</h2>
+
+        <div v-if="loading" class="text-center py-12">
+          <div class="animate-pulse text-blue-400">Loading events...</div>
+        </div>
+
+        <div v-else class="grid md:grid-cols-2 gap-8">
+          <!-- Engagement Party (Left) -->
+          <div class="card flex flex-col bg-white/80 border-blush-100">
+            <div class="text-center mb-6">
+              <span class="text-4xl mb-3 block">💍</span>
+              <h3 class="font-serif text-2xl text-slate-800 mb-2">Engagement Party</h3>
+              <p class="text-blue-500 font-medium">{{ scheduleInfo.engagement.date }}</p>
+              <p class="text-slate-600">{{ scheduleInfo.engagement.time }}</p>
+            </div>
+
+            <div class="mb-6">
+              <p class="font-medium text-slate-800 text-lg">{{ venueInfo.engagement.name }}</p>
+              <p class="text-slate-600">{{ venueInfo.engagement.address }}</p>
+              <p class="text-slate-600 mb-3">{{ venueInfo.engagement.city }}</p>
+
+              <div class="bg-slate-100 rounded-lg overflow-hidden aspect-video mb-3">
+                <iframe
+                  :src="venueInfo.engagement.mapsEmbed"
+                  width="100%"
+                  height="100%"
+                  style="border:0; min-height: 180px;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  class="w-full h-full"
+                ></iframe>
+              </div>
+
+              <a
+                :href="venueInfo.engagement.mapsUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium text-sm"
+              >
+                <span>📍</span> Get Directions
+              </a>
+            </div>
+
+            <div class="mb-6">
+              <p class="text-sm text-slate-600 mb-2">{{ scheduleInfo.engagement.details }}</p>
+              <div class="space-y-1 text-sm text-slate-600">
+                <p><span class="font-medium">Parking:</span> {{ venueInfo.engagement.parking }}</p>
+              </div>
+            </div>
+
+            <!-- RSVP Button -->
+            <div class="mt-auto text-center">
+              <router-link
+                to="/engagement"
+                class="btn-primary inline-block w-full py-3"
+              >
+                RSVP for Engagement Party
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Wedding (Right) -->
+          <div class="card flex flex-col bg-white/80 border-lavender-100">
+            <div class="text-center mb-6">
+              <span class="text-4xl mb-3 block">💒</span>
+              <h3 class="font-serif text-2xl text-slate-800 mb-2">Wedding Day</h3>
+              <p class="text-blue-500 font-medium">{{ scheduleInfo.wedding.date }}</p>
+              <p class="text-slate-600">Ceremony: {{ scheduleInfo.wedding.ceremonyTime }} | Reception: {{ scheduleInfo.wedding.receptionTime }}</p>
+            </div>
+
+            <div class="mb-6">
+              <p class="font-medium text-slate-800 text-lg">{{ venueInfo.wedding.name }}</p>
+              <p class="text-slate-600">{{ venueInfo.wedding.address }}</p>
+              <p class="text-slate-600 mb-3">{{ venueInfo.wedding.city }}</p>
+
+              <div class="bg-slate-100 rounded-lg overflow-hidden aspect-video mb-3">
+                <iframe
+                  :src="venueInfo.wedding.mapsEmbed"
+                  width="100%"
+                  height="100%"
+                  style="border:0; min-height: 180px;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  class="w-full h-full"
+                ></iframe>
+              </div>
+
+              <a
+                :href="venueInfo.wedding.mapsUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium text-sm"
+              >
+                <span>📍</span> Get Directions
+              </a>
+            </div>
+
+            <div class="mb-6">
+              <p class="text-sm text-slate-600 mb-2">{{ scheduleInfo.wedding.details }}</p>
+              <div class="space-y-1 text-sm text-slate-600">
+                <p><span class="font-medium">Parking:</span> {{ venueInfo.wedding.parking }}</p>
+                <p v-if="venueInfo.wedding.accommodation"><span class="font-medium">Accommodation:</span> {{ venueInfo.wedding.accommodation }}</p>
+              </div>
+            </div>
+
+            <!-- RSVP Button -->
+            <div class="mt-auto text-center">
+              <router-link
+                to="/wedding"
+                class="btn-primary inline-block w-full py-3"
+              >
+                RSVP for Wedding
+              </router-link>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shared Dress Code Section -->
+        <div class="mt-8 p-6 bg-white/80 rounded-xl text-center max-w-4xl mx-auto border border-sage-100">
+          <div class="flex items-center justify-center gap-2 mb-3">
+            <span class="text-sage-500 text-xl">🌸</span>
+            <span class="font-serif text-xl text-slate-800">Dress Code</span>
+            <span class="bg-sage-100 text-sage-600 px-3 py-1 rounded-full text-sm font-medium">
+              {{ dressCodeInfo.code }}
+            </span>
+          </div>
+          <p class="text-sm text-sage-500 font-medium mb-3">For both the Engagement Party & Wedding</p>
+          <p class="text-slate-600">{{ dressCodeInfo.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registry Section - Light Green -->
+    <section class="bg-green-50 py-16 px-4">
+      <div class="max-w-4xl mx-auto text-center">
         <span class="text-5xl mb-6 block">🎁</span>
         <h2 class="font-serif text-3xl text-slate-800 mb-4">Gift Registry</h2>
         <p class="text-lg text-slate-600 mb-6 max-w-xl mx-auto">
@@ -294,40 +291,35 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Decorative Botanical Divider -->
-    <div class="flex items-center justify-center gap-4 mb-16">
-      <div class="h-px bg-gradient-to-r from-transparent via-sage-300 to-transparent w-32"></div>
-      <span class="text-sage-400 text-2xl">🍃</span>
-      <div class="h-px bg-gradient-to-r from-transparent via-sage-300 to-transparent w-32"></div>
-    </div>
+    <!-- FAQ Section - Light Purple -->
+    <section id="faq" class="bg-purple-50 py-16 px-4 scroll-mt-24">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Frequently Asked Questions</h2>
 
-    <!-- FAQ Section -->
-    <section id="faq" class="max-w-4xl mx-auto mb-16 scroll-mt-24">
-      <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Frequently Asked Questions</h2>
-
-      <div class="space-y-4">
-        <div
-          v-for="(faq, index) in faqItems"
-          :key="index"
-          class="card !p-0 overflow-hidden"
-        >
-          <button
-            @click="toggleFaq(index)"
-            class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition-colors"
-          >
-            <span class="font-medium text-slate-800">{{ faq.question }}</span>
-            <span
-              class="text-blue-400 transition-transform duration-200"
-              :class="{ 'rotate-180': openFaq === index }"
-            >
-              ▼
-            </span>
-          </button>
+        <div class="space-y-4">
           <div
-            v-show="openFaq === index"
-            class="px-6 pb-4 text-slate-600"
+            v-for="(faq, index) in faqItems"
+            :key="index"
+            class="bg-white/80 rounded-xl shadow-sm overflow-hidden"
           >
-            {{ faq.answer }}
+            <button
+              @click="toggleFaq(index)"
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white transition-colors"
+            >
+              <span class="font-medium text-slate-800">{{ faq.question }}</span>
+              <span
+                class="text-blue-400 transition-transform duration-200"
+                :class="{ 'rotate-180': openFaq === index }"
+              >
+                ▼
+              </span>
+            </button>
+            <div
+              v-show="openFaq === index"
+              class="px-6 pb-4 text-slate-600"
+            >
+              {{ faq.answer }}
+            </div>
           </div>
         </div>
       </div>
