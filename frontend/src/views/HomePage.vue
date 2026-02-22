@@ -82,7 +82,7 @@ const faqItems = [
   },
   {
     question: 'What is the dress code?',
-    answer: 'Attire is Garden Formal. If you\'d like to embrace the theme further, feel free to be imaginative with bright & pastel colors, florals, etc, but any daytime formal attire is appropriate. We suggest lightweight suits for men and airy long dresses for women. We kindly ask ladies to avoid wearing blue so as not to match our bridesmaids.'
+    answer: 'Attire is Garden Formal. If you\'d like to embrace the theme further, feel free to be imaginative with bright & pastel colors, florals, etc, but any daytime formal attire is appropriate. We suggest lightweight suits for men and airy long dresses for women.'
   }
 ]
 
