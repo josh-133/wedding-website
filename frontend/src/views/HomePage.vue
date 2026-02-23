@@ -30,8 +30,8 @@ const scheduleInfo = {
   },
   wedding: {
     date: 'Saturday, 22nd May 2027',
-    ceremonyTime: '2:30 PM for a 3:00 PM start',
-    receptionTime: '5:00 PM - Midnight',
+    ceremonyTime: '3PM',
+    receptionTime: '5PM - Late',
     details: 'Ceremony followed by cocktail hour and reception dinner'
   }
 }
@@ -115,8 +115,8 @@ onMounted(async () => {
 <template>
   <div class="bg-blue-50">
     <!-- Hero/Welcome Section -->
-    <section class="pt-32 pb-28 px-4">
-      <div class="max-w-4xl mx-auto text-center">
+    <section class="pt-32 pb-28 px-4 md:px-8">
+      <div class="max-w-4xl mx-auto bg-white border border-blue-200 rounded-2xl p-10 md:p-16 text-center shadow-sm">
         <div class="flex items-center justify-center gap-3 mb-4">
           <span class="text-sage-400 text-lg">🌿</span>
           <p class="text-sage-500 uppercase tracking-widest text-sm">You're Invited</p>
@@ -133,12 +133,9 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-
     <!-- Our Celebrations Section -->
-    <section class="py-28 px-4">
-      <div class="max-w-6xl mx-auto">
+    <section class="py-28 px-4 md:px-8">
+      <div class="max-w-6xl mx-auto bg-white border border-blue-200 rounded-2xl p-8 md:p-12 shadow-sm">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Our Celebrations</h2>
 
         <div v-if="loading" class="text-center py-12">
@@ -261,12 +258,9 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-
     <!-- Registry Section -->
-    <section class="py-28 px-4">
-      <div class="max-w-4xl mx-auto text-center">
+    <section class="py-28 px-4 md:px-8">
+      <div class="max-w-4xl mx-auto bg-white border border-blue-200 rounded-2xl p-10 md:p-16 text-center shadow-sm">
         <span class="text-5xl mb-6 block">🎁</span>
         <h2 class="font-serif text-3xl text-slate-800 mb-4">Gift Registry</h2>
         <p class="text-lg text-slate-600 mb-6 max-w-xl mx-auto">
@@ -278,23 +272,20 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Section Divider -->
-    <div class="max-w-xs mx-auto h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
-
     <!-- FAQ Section -->
-    <section id="faq" class="py-28 px-4 scroll-mt-24">
-      <div class="max-w-4xl mx-auto">
+    <section id="faq" class="py-28 px-4 md:px-8 scroll-mt-24">
+      <div class="max-w-4xl mx-auto bg-white border border-blue-200 rounded-2xl p-8 md:p-12 shadow-sm">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Frequently Asked Questions</h2>
 
         <div class="space-y-4">
           <div
             v-for="(faq, index) in faqItems"
             :key="index"
-            class="bg-white/80 rounded-xl shadow-sm overflow-hidden"
+            class="bg-blue-50 rounded-xl overflow-hidden"
           >
             <button
               @click="toggleFaq(index)"
-              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white transition-colors"
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-blue-100/50 transition-colors"
             >
               <span class="font-medium text-slate-800">{{ faq.question }}</span>
               <span

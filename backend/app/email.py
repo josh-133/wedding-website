@@ -17,8 +17,8 @@ EVENT_DETAILS = {
         "venue_address": "14 Pittwater Dr, Windsor Gardens SA 5087"
     },
     "wedding": {
-        "ceremony_time": "2:30 PM for a 3:00 PM start",
-        "reception_time": "5:00 PM - Midnight",
+        "ceremony_time": "3PM",
+        "reception_time": "5PM - Late",
         "venue_name": "Mount Lofty House",
         "venue_address": "1 Mawson Dr, Crafers SA 5152"
     }
