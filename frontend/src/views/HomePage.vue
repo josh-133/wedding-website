@@ -115,7 +115,7 @@ onMounted(async () => {
 <template>
   <div class="bg-blue-50">
     <!-- Hero/Welcome Section -->
-    <section class="pt-32 pb-28 px-4 md:px-8">
+    <section class="pt-32 pb-12 px-4 md:px-8">
       <div class="max-w-4xl mx-auto bg-white border border-blue-200 rounded-2xl p-10 md:p-16 text-center shadow-sm">
         <div class="flex items-center justify-center gap-3 mb-4">
           <span class="text-sage-400 text-lg">🌿</span>
@@ -134,7 +134,7 @@ onMounted(async () => {
     </section>
 
     <!-- Our Celebrations Section -->
-    <section class="py-28 px-4 md:px-8">
+    <section class="py-12 px-4 md:px-8">
       <div class="max-w-6xl mx-auto bg-white border border-blue-200 rounded-2xl p-8 md:p-12 shadow-sm">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Our Celebrations</h2>
 
@@ -146,7 +146,6 @@ onMounted(async () => {
           <!-- Engagement Party (Left) -->
           <div class="card flex flex-col bg-white/80 border-blush-100">
             <div class="text-center mb-6">
-              <span class="text-4xl mb-3 block">💍</span>
               <h3 class="font-serif text-2xl text-slate-800 mb-2">Engagement Party</h3>
               <p class="text-blue-500 font-medium">{{ scheduleInfo.engagement.date }}</p>
               <p class="text-slate-600">{{ scheduleInfo.engagement.time }}</p>
@@ -201,7 +200,6 @@ onMounted(async () => {
           <!-- Wedding (Right) -->
           <div class="card flex flex-col bg-white/80 border-lavender-100">
             <div class="text-center mb-6">
-              <span class="text-4xl mb-3 block">💒</span>
               <h3 class="font-serif text-2xl text-slate-800 mb-2">Wedding Day</h3>
               <p class="text-blue-500 font-medium">{{ scheduleInfo.wedding.date }}</p>
               <p class="text-slate-600">Ceremony: {{ scheduleInfo.wedding.ceremonyTime }} | Reception: {{ scheduleInfo.wedding.receptionTime }}</p>
@@ -259,21 +257,20 @@ onMounted(async () => {
     </section>
 
     <!-- Registry Section -->
-    <section class="py-28 px-4 md:px-8">
+    <section class="py-12 px-4 md:px-8">
       <div class="max-w-4xl mx-auto bg-white border border-blue-200 rounded-2xl p-10 md:p-16 text-center shadow-sm">
-        <span class="text-5xl mb-6 block">🎁</span>
-        <h2 class="font-serif text-3xl text-slate-800 mb-4">Gift Registry</h2>
+        <h2 class="font-serif text-3xl text-slate-800 mb-4">Honeymoon Fund</h2>
         <p class="text-lg text-slate-600 mb-6 max-w-xl mx-auto">
-          Your presence at our wedding is the greatest gift of all. However, if you wish to honour us with a gift, we have created a registry for your convenience.
+          Your presence at our wedding is the greatest gift of all. However, if you wish to contribute to our honeymoon, we have set up a fund for your convenience.
         </p>
         <router-link to="/registry" class="btn-primary inline-block text-lg px-8 py-3">
-          View Registry
+          View Honeymoon Fund
         </router-link>
       </div>
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="py-28 px-4 md:px-8 scroll-mt-24">
+    <section id="faq" class="py-12 pb-24 px-4 md:px-8 scroll-mt-24">
       <div class="max-w-4xl mx-auto bg-white border border-blue-200 rounded-2xl p-8 md:p-12 shadow-sm">
         <h2 class="font-serif text-3xl text-slate-800 text-center mb-8">Frequently Asked Questions</h2>
 
