@@ -24,6 +24,7 @@ class RSVP(Base):
     event_id = Column(Integer, ForeignKey("events.id"), nullable=False)
     name = Column(String(200), nullable=False)  # Primary contact name
     email = Column(String(254), nullable=False)
+    postal_address = Column(String(500), nullable=True)
     attending = Column(Boolean, nullable=False)
     guest_count = Column(Integer, nullable=False, default=1)  # Total number of guests (including primary)
     submitted_at = Column(DateTime, server_default=func.now())

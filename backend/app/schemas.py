@@ -58,6 +58,7 @@ class RSVPCreate(BaseModel):
     event_slug: str = Field(..., min_length=1, max_length=50)
     name: str = Field(..., min_length=1, max_length=200)
     email: EmailStr
+    postal_address: Optional[str] = Field(None, max_length=500)
     attending: bool
     dietary_requirements: Optional[str] = Field(None, max_length=500)  # Primary contact's dietary requirements
     guests: List[GuestCreate] = Field(default_factory=list, max_length=5)
@@ -107,6 +108,7 @@ class RSVPResponse(BaseModel):
     id: int
     name: str
     email: str
+    postal_address: Optional[str] = None
     attending: bool
     guest_count: int
     submitted_at: datetime
@@ -120,6 +122,7 @@ class RSVPListResponse(BaseModel):
     id: int
     name: str
     email: str
+    postal_address: Optional[str] = None
     attending: bool
     guest_count: int
     submitted_at: datetime

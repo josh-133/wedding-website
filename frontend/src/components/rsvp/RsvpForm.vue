@@ -22,6 +22,7 @@ const MAX_GUESTS = 5
 // Primary contact fields
 const name = ref('')
 const email = ref('')
+const postalAddress = ref('')
 const dietaryRequirements = ref('')
 const attending = ref(true)
 
@@ -73,6 +74,7 @@ async function handleSubmit() {
       event_slug: props.eventSlug,
       name: name.value.trim(),
       email: email.value.trim(),
+      postal_address: postalAddress.value.trim() || null,
       attending: attending.value,
       dietary_requirements: dietaryRequirements.value.trim() || null,
       guests: guests
@@ -88,6 +90,7 @@ async function handleSubmit() {
 function resetForm() {
   name.value = ''
   email.value = ''
+  postalAddress.value = ''
   dietaryRequirements.value = ''
   attending.value = true
   additionalGuests.value = []
@@ -184,6 +187,18 @@ function resetForm() {
               placeholder="your@email.com"
               required
             />
+          </div>
+
+          <div>
+            <label for="postal-address" class="block text-slate-600 text-sm mb-1">Postal Address</label>
+            <textarea
+              id="postal-address"
+              v-model="postalAddress"
+              class="input-field"
+              rows="2"
+              placeholder="Your mailing address"
+            ></textarea>
+            <p class="text-slate-400 text-xs mt-1">This will be used to mail you a save the date and formal invitation.</p>
           </div>
 
           <div v-if="attending">

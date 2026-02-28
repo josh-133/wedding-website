@@ -1,7 +1,10 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text, inspect
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import date
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Use DATABASE_URL from environment, with fallback to local data directory
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -27,9 +30,21 @@ def get_db():
         db.close()
 
 
+def run_migrations():
+    """Add new columns to existing tables if they don't exist."""
+    inspector = inspect(engine)
+    if "rsvps" in inspector.get_table_names():
+        columns = [col["name"] for col in inspector.get_columns("rsvps")]
+        if "postal_address" not in columns:
+            with engine.begin() as conn:
+                conn.execute(text("ALTER TABLE rsvps ADD COLUMN postal_address VARCHAR(500)"))
+            logger.info("Added postal_address column to rsvps table")
+
+
 def init_db():
     from . import models
     Base.metadata.create_all(bind=engine)
+    run_migrations()
 
     # Seed initial data
     db = SessionLocal()

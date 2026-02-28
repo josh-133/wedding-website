@@ -81,6 +81,7 @@ def create_rsvp(
     if existing_rsvp:
         # Update existing RSVP
         existing_rsvp.name = rsvp.name
+        existing_rsvp.postal_address = rsvp.postal_address
         existing_rsvp.attending = rsvp.attending
         existing_rsvp.guest_count = guest_count
 
@@ -115,6 +116,7 @@ def create_rsvp(
         event_id=event.id,
         name=rsvp.name,
         email=rsvp.email,
+        postal_address=rsvp.postal_address,
         attending=rsvp.attending,
         guest_count=guest_count
     )
