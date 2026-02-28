@@ -83,6 +83,7 @@ def get_rsvps(
             id=rsvp.id,
             name=rsvp.name,
             email=rsvp.email,
+            postal_address=rsvp.postal_address,
             attending=rsvp.attending,
             guest_count=rsvp.guest_count,
             submitted_at=rsvp.submitted_at,
@@ -180,7 +181,7 @@ def export_rsvps(
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow([
-        "Event", "Primary Contact", "Email", "Attending",
+        "Event", "Primary Contact", "Email", "Postal Address", "Attending",
         "Guest Count", "Guest Name", "Dietary Requirements",
         "Is Primary", "Submitted At"
     ])
@@ -192,6 +193,7 @@ def export_rsvps(
                 rsvp.event.name,
                 rsvp.name,
                 rsvp.email,
+                rsvp.postal_address or "",
                 "Yes" if rsvp.attending else "No",
                 rsvp.guest_count,
                 guest.name,
@@ -205,6 +207,7 @@ def export_rsvps(
                 rsvp.event.name,
                 rsvp.name,
                 rsvp.email,
+                rsvp.postal_address or "",
                 "Yes" if rsvp.attending else "No",
                 rsvp.guest_count,
                 rsvp.name,
