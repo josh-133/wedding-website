@@ -146,30 +146,36 @@ function cancelDelete() {
               </td>
             </tr>
             <!-- Expanded Guest Details -->
-            <tr v-if="isExpanded(rsvp.id) && rsvp.guests && rsvp.guests.length > 0">
+            <tr v-if="isExpanded(rsvp.id)">
               <td colspan="8" class="bg-slate-50 px-4 py-3">
-                <div class="ml-8">
-                  <p class="text-sm font-medium text-slate-600 mb-2">Guest Details:</p>
-                  <div class="grid gap-2">
-                    <div
-                      v-for="guest in rsvp.guests"
-                      :key="guest.id"
-                      class="flex items-center gap-4 text-sm"
-                    >
-                      <span
-                        :class="[
-                          'px-2 py-0.5 rounded text-xs',
-                          guest.is_primary
-                            ? 'bg-blue-100 text-blue-600'
-                            : 'bg-slate-200 text-slate-600'
-                        ]"
+                <div class="ml-8 space-y-3">
+                  <div v-if="rsvp.postal_address">
+                    <p class="text-sm font-medium text-slate-600 mb-1">Postal Address:</p>
+                    <p class="text-sm text-slate-800 whitespace-pre-line">{{ rsvp.postal_address }}</p>
+                  </div>
+                  <div v-if="rsvp.guests && rsvp.guests.length > 0">
+                    <p class="text-sm font-medium text-slate-600 mb-2">Guest Details:</p>
+                    <div class="grid gap-2">
+                      <div
+                        v-for="guest in rsvp.guests"
+                        :key="guest.id"
+                        class="flex items-center gap-4 text-sm"
                       >
-                        {{ guest.is_primary ? 'Primary' : 'Guest' }}
-                      </span>
-                      <span class="text-slate-800">{{ guest.name }}</span>
-                      <span v-if="guest.dietary_requirements" class="text-slate-500">
-                        Dietary: {{ guest.dietary_requirements }}
-                      </span>
+                        <span
+                          :class="[
+                            'px-2 py-0.5 rounded text-xs',
+                            guest.is_primary
+                              ? 'bg-blue-100 text-blue-600'
+                              : 'bg-slate-200 text-slate-600'
+                          ]"
+                        >
+                          {{ guest.is_primary ? 'Primary' : 'Guest' }}
+                        </span>
+                        <span class="text-slate-800">{{ guest.name }}</span>
+                        <span v-if="guest.dietary_requirements" class="text-slate-500">
+                          Dietary: {{ guest.dietary_requirements }}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

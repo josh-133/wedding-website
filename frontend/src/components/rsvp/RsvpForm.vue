@@ -52,6 +52,11 @@ async function handleSubmit() {
     return
   }
 
+  if (!postalAddress.value.trim()) {
+    error.value = 'Please enter your postal address'
+    return
+  }
+
   // Validate additional guest names
   for (let i = 0; i < additionalGuests.value.length; i++) {
     if (!additionalGuests.value[i].name.trim()) {
@@ -197,6 +202,7 @@ function resetForm() {
               class="input-field"
               rows="2"
               placeholder="Your mailing address"
+              required
             ></textarea>
             <p class="text-slate-400 text-xs mt-1">This will be used to mail you a save the date and formal invitation.</p>
           </div>
