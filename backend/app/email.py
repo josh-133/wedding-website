@@ -14,7 +14,7 @@ EVENT_DETAILS = {
     "engagement": {
         "time": "4:00 PM - 8:00 PM",
         "venue_name": "Beefacres Hall",
-        "venue_address": "14 Pittwater Dr, Windsor Gardens SA 5087"
+        "venue_address": "1 Pittwater Dr, Windsor Gardens SA 5087"
     },
     "wedding": {
         "ceremony_time": "3PM",
