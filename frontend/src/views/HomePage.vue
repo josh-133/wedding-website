@@ -43,7 +43,7 @@ const venueInfo = {
     address: '1 Pittwater Dr',
     city: 'Windsor Gardens SA 5087',
     mapsUrl: 'https://maps.google.com/?q=1+Pittwater+Dr,+Windsor+Gardens+SA+5087',
-    mapsEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3271.5!2d138.6647!3d-34.8547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ab0b8e5c5c5c5c5%3A0x0!2s1%20Pittwater%20Dr%2C%20Windsor%20Gardens%20SA%205087!5e0!3m2!1sen!2sau!4v1234567890',
+    mapsEmbed: 'https://www.google.com/maps/place/1+Pittwater+Dr,+Windsor+Gardens+SA+5087/@-34.8653773,138.6601345,815m/data=!3m2!1e3!4b1!4m6!3m5!1s0x6ab0b58c0b2afc51:0x93a64a35b96ecfe4!8m2!3d-34.8653817!4d138.6627094!16s%2Fg%2F11vx1vhkwy?entry=ttu&g_ep=EgoyMDI2MDUxMy4wIKXMDSoASAFQAw%3D%3D',
     parking: 'On-site parking available',
     notes: ''
   },
